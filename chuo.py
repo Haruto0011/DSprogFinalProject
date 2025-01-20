@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import pandas as pd
 
-# 中央区の賃貸物件SUUMOページURL
+# 中央区のSUUMO賃貸ページURL
 url = "https://suumo.jp/chintai/tokyo/sc_chuo/"
 
 # ヘッダー設定
@@ -25,8 +25,12 @@ def scrape_rental_properties(base_url):
         
         soup = BeautifulSoup(response.text, "html.parser")
         
-        # 賃貸物件リストを取得
+        # SUUMOページ内の賃貸物件リストを取得
         property_list = soup.find_all("div", class_="cassetteitem")
+        if not property_list:
+            print("物件リストが取得できませんでした。HTML構造を確認してください。")
+            break
+
         for property in property_list:
             try:
                 # 必要なデータを抽出
@@ -48,10 +52,10 @@ def scrape_rental_properties(base_url):
                 })
             except AttributeError:
                 continue
-        
+
         # 次ページへのリンクを取得
         next_page = soup.find("a", class_="pagination__next")
-        if next_page:
+        if next_page and next_page.get("href"):
             base_url = "https://suumo.jp" + next_page.get("href")
             page += 1
             time.sleep(3)  # サーバー負荷軽減のため待機
