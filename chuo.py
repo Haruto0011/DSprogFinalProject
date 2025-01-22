@@ -48,7 +48,6 @@ def scrape_rental_properties(base_url):
                     "最寄り駅": stations,
                     "賃料": rent,
                     "間取り": layout,
-                    "面積": area
                 })
             except AttributeError:
                 continue
@@ -71,6 +70,6 @@ properties = scrape_rental_properties(url)
 if properties:
     df = pd.DataFrame(properties)
     df.to_csv("chuo_rental_properties.csv", index=False, encoding="utf-8-sig")
-    print("データをCSVに保存しました: chuo_rental_properties.csv")
+    print("データをCSVに保存しました: chuo_rental_properties_1.csv")
 else:
     print("物件データが取得できませんでした。")
